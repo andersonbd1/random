@@ -1,0 +1,48 @@
+<!-- MSBuild.exe ./ben.proj /property:MainClass=Delegates -->
+<?xml version="1.0" encoding="utf-8"?>
+
+<Project ToolsVersion="4.0" DefaultTargets="run" xmlns="http://schemas.microsoft.com/developer/msbuild/2003"> 
+
+  <PropertyGroup>
+    <AppName>ben</AppName>
+    <!--
+    <MainClass>Lambdas</MainClass>
+    -->
+    <BuildDir>build</BuildDir>
+    <SrcDir>src</SrcDir>
+  </PropertyGroup> 
+
+  <ItemGroup>
+    <Compile Include="$(SrcDir)\*.cs" /> 
+  </ItemGroup>
+
+  <Target Name="init">
+    <MakeDir Directories="$(BuildDir)" />
+  </Target>
+  
+  <Target Name="compile" DependsOnTargets="init">
+    <Message Text="BuildDir: $(BuildDir)" />
+    <Csc MainEntryPoint="$(MainClass)"
+      Sources="@(Compile)" 
+      OutputAssembly="$(BuildDir)\$(AppName).exe" />
+  </Target>
+
+  
+  
+  <Target Name="run" DependsOnTargets="compile">
+    <PropertyGroup>
+       <OutputFile>$(BuildDir)\Output.txt</OutputFile>
+    </PropertyGroup>
+    <Message Text="---------------------------------" />
+    <Exec Command="$(BuildDir)\$(AppName).exe" />
+    <Message Text="---------------------------------" />
+    <!--
+    <Exec Command="$(BuildDir)\$(AppName).exe > &quot;$(OutputFile)&quot;" />
+    <ReadLinesFromFile File="$(OutputFile)">
+      <Output TaskParameter="Lines" ItemName="OutputLines"/>
+    </ReadLinesFromFile>
+    <Message Text="@(OutputLines->'%(Identity)', '%0a%0d')" />
+    -->
+  </Target>
+
+</Project>
